@@ -1,0 +1,33 @@
+{
+  "name": "michaelhall/page-fetcher",
+  "description": "Simple web page fetcher",
+  "license": "MIT",
+  "keywords": [
+    "page",
+    "fetcher"
+  ],
+  "authors": [
+    {
+      "name": "Michael Hall",
+      "homepage": "https://michaelhall.se/"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "ext-curl": "*",
+    "datatypes/datatypes": "~1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "MichaelHall\\PageFetcher\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "MichaelHall\\PageFetcher\\Tests\\": "tests"
+    }
+  }
+}
