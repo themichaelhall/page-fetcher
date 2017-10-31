@@ -21,6 +21,6 @@ class PageFetcherTest extends TestCase
         $pageFetcher = new PageFetcher();
         $result = $pageFetcher->fetch(Url::parse('https://httpbin.org/'));
 
-        self::assertSame(200, $result);
+        self::assertSame(200, $result->getHttpCode());
     }
 }

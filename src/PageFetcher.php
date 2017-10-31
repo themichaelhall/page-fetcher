@@ -4,12 +4,12 @@
  *
  * Read more at https://github.com/themichaelhall/page-fetcher
  */
-
 declare(strict_types=1);
 
 namespace MichaelHall\PageFetcher;
 
 use DataTypes\Interfaces\UrlInterface;
+use MichaelHall\PageFetcher\Interfaces\PageFetcherResultInterface;
 
 /**
  * Page fetcher class.
@@ -25,9 +25,9 @@ class PageFetcher
      *
      * @param UrlInterface $url The url.
      *
-     * @return int The http status code.
+     * @return PageFetcherResultInterface The page fetcher result.
      */
-    public function fetch(UrlInterface $url): int
+    public function fetch(UrlInterface $url): PageFetcherResultInterface
     {
         $curl = curl_init();
 
@@ -37,10 +37,10 @@ class PageFetcher
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
 
         curl_exec($curl);
-        $httpCode = (int)curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $httpCode = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
 
-        return $httpCode;
+        return new PageFetcherResult($httpCode);
     }
 }
