@@ -37,7 +37,7 @@ class PageFetcher
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
 
         curl_exec($curl);
-        $httpCode = (int)curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $httpCode = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
 
