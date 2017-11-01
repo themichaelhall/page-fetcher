@@ -6,6 +6,7 @@ namespace MichaelHall\PageFetcher\Tests;
 
 use DataTypes\Url;
 use MichaelHall\PageFetcher\PageFetcher;
+use MichaelHall\PageFetcher\PageFetcherRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -19,7 +20,8 @@ class PageFetcherTest extends TestCase
     public function testOkResult()
     {
         $pageFetcher = new PageFetcher();
-        $result = $pageFetcher->fetch(Url::parse('https://httpbin.org/'));
+        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/'));
+        $result = $pageFetcher->fetch($request);
 
         self::assertSame(200, $result->getHttpCode());
     }

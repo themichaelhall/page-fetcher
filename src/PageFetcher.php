@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace MichaelHall\PageFetcher;
 
-use DataTypes\Interfaces\UrlInterface;
+use MichaelHall\PageFetcher\Interfaces\PageFetcherRequestInterface;
 use MichaelHall\PageFetcher\Interfaces\PageFetcherResultInterface;
 
 /**
@@ -23,21 +23,21 @@ class PageFetcher
      *
      * @since 1.0.0
      *
-     * @param UrlInterface $url The url.
+     * @param PageFetcherRequestInterface $request The page fetcher request.
      *
      * @return PageFetcherResultInterface The page fetcher result.
      */
-    public function fetch(UrlInterface $url): PageFetcherResultInterface
+    public function fetch(PageFetcherRequestInterface $request): PageFetcherResultInterface
     {
         $curl = curl_init();
 
-        curl_setopt($curl, CURLOPT_URL, $url->__toString());
+        curl_setopt($curl, CURLOPT_URL, $request->getUrl()->__toString());
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, true);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
 
         curl_exec($curl);
-        $httpCode = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $httpCode = (int)curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
 
