@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MichaelHall\PageFetcher;
 
+use MichaelHall\PageFetcher\Interfaces\PageFetcherInterface;
 use MichaelHall\PageFetcher\Interfaces\PageFetcherRequestInterface;
 use MichaelHall\PageFetcher\Interfaces\PageFetcherResultInterface;
 
@@ -16,10 +17,10 @@ use MichaelHall\PageFetcher\Interfaces\PageFetcherResultInterface;
  *
  * @since 1.0.0
  */
-class PageFetcher
+class PageFetcher implements PageFetcherInterface
 {
     /**
-     * Fetches the content from an url.
+     * Fetches the content from a request.
      *
      * @since 1.0.0
      *
