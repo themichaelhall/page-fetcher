@@ -25,4 +25,28 @@ class PageFetcherTest extends TestCase
 
         self::assertSame(200, $result->getHttpCode());
     }
+
+    /**
+     * Test fetching a page with failed connection.
+     */
+    public function testFailedConnectionResult()
+    {
+        $pageFetcher = new PageFetcher();
+        $request = new PageFetcherRequest(Url::parse('https://localhost:123/'));
+        $result = $pageFetcher->fetch($request);
+
+        self::assertSame(0, $result->getHttpCode());
+    }
+
+    /**
+     * Test fetching a page with 404 Not Found result.
+     */
+    public function testNotFoundResult()
+    {
+        $pageFetcher = new PageFetcher();
+        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/status/404'));
+        $result = $pageFetcher->fetch($request);
+
+        self::assertSame(404, $result->getHttpCode());
+    }
 }
