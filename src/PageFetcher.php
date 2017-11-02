@@ -39,13 +39,18 @@ class PageFetcher implements PageFetcherInterface
 
         $result = curl_exec($curl);
         if ($result === false) {
-            return new PageFetcherResult(0);
+            $error = curl_error($curl);
+            curl_close($curl);
+
+            return new PageFetcherResult(0, $error);
         }
 
         $httpCode = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
         curl_close($curl);
 
-        return new PageFetcherResult($httpCode);
+        $resultParts = explode("\r\n\r\n", $result, 2);
+        $content = count($resultParts) > 1 ? $resultParts[1] : '';
+
+        return new PageFetcherResult($httpCode, $content);
     }
 }

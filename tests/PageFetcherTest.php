@@ -24,6 +24,7 @@ class PageFetcherTest extends TestCase
         $result = $pageFetcher->fetch($request);
 
         self::assertSame(200, $result->getHttpCode());
+        self::assertContains('httpbin', $result->getContent());
         self::assertTrue($result->isSuccessful());
     }
 
@@ -37,6 +38,7 @@ class PageFetcherTest extends TestCase
         $result = $pageFetcher->fetch($request);
 
         self::assertSame(0, $result->getHttpCode());
+        self::assertSame('Failed to connect to localhost port 123: Connection refused', $result->getContent());
         self::assertFalse($result->isSuccessful());
     }
 
@@ -46,10 +48,11 @@ class PageFetcherTest extends TestCase
     public function testNotFoundResult()
     {
         $pageFetcher = new PageFetcher();
-        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/status/404'));
+        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/status/418'));
         $result = $pageFetcher->fetch($request);
 
-        self::assertSame(404, $result->getHttpCode());
+        self::assertSame(418, $result->getHttpCode());
+        self::assertContains('-=[ teapot ]=-', $result->getContent());
         self::assertFalse($result->isSuccessful());
     }
 }
