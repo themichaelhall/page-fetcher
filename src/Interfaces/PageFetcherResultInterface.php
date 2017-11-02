@@ -16,6 +16,15 @@ namespace MichaelHall\PageFetcher\Interfaces;
 interface PageFetcherResultInterface
 {
     /**
+     * Returns the content.
+     *
+     * @since 1.0.0
+     *
+     * @return string The content.
+     */
+    public function getContent(): string;
+
+    /**
      * Returns the http code.
      *
      * @since 1.0.0

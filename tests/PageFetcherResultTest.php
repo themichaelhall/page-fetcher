@@ -13,14 +13,27 @@ use PHPUnit\Framework\TestCase;
 class PageFetcherResultTest extends TestCase
 {
     /**
-     * Tests a standard result.
+     * Test default result.
      */
-    public function testStandardResult()
+    public function testDefaultResult()
     {
-        $result = new PageFetcherResult(200);
+        $result = new PageFetcherResult();
 
         self::assertSame(200, $result->getHttpCode());
+        self::assertSame('', $result->getContent());
         self::assertTrue($result->isSuccessful());
+    }
+
+    /**
+     * Test custom result.
+     */
+    public function testCustomResult()
+    {
+        $result = new PageFetcherResult(404, 'Page was not found.');
+
+        self::assertSame(404, $result->getHttpCode());
+        self::assertSame('Page was not found.', $result->getContent());
+        self::assertFalse($result->isSuccessful());
     }
 
     /**

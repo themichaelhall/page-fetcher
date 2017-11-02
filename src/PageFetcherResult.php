@@ -22,11 +22,25 @@ class PageFetcherResult implements PageFetcherResultInterface
      *
      * @since 1.0.0
      *
-     * @param int $httpCode The http code.
+     * @param int    $httpCode The http code.
+     * @param string $content  The content.
      */
-    public function __construct(int $httpCode)
+    public function __construct(int $httpCode = 200, string $content = '')
     {
         $this->myHttpCode = $httpCode;
+        $this->myContent = $content;
+    }
+
+    /**
+     * Returns the content.
+     *
+     * @since 1.0.0
+     *
+     * @return string The content.
+     */
+    public function getContent(): string
+    {
+        return $this->myContent;
     }
 
     /**
@@ -57,4 +71,9 @@ class PageFetcherResult implements PageFetcherResultInterface
      * @var int My http code.
      */
     private $myHttpCode;
+
+    /**
+     * @var string My content.
+     */
+    private $myContent;
 }
