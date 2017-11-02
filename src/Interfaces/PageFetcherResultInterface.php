@@ -23,4 +23,13 @@ interface PageFetcherResultInterface
      * @return int The http code.
      */
     public function getHttpCode(): int;
+
+    /**
+     * Returns true if the response is successful, false otherwise.
+     *
+     * @since 1.0.0
+     *
+     * @return bool True if the response is successful, false otherwise.
+     */
+    public function isSuccessful(): bool;
 }

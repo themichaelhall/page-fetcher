@@ -24,6 +24,7 @@ class PageFetcherTest extends TestCase
         $result = $pageFetcher->fetch($request);
 
         self::assertSame(200, $result->getHttpCode());
+        self::assertTrue($result->isSuccessful());
     }
 
     /**
@@ -36,6 +37,7 @@ class PageFetcherTest extends TestCase
         $result = $pageFetcher->fetch($request);
 
         self::assertSame(0, $result->getHttpCode());
+        self::assertFalse($result->isSuccessful());
     }
 
     /**
@@ -48,5 +50,6 @@ class PageFetcherTest extends TestCase
         $result = $pageFetcher->fetch($request);
 
         self::assertSame(404, $result->getHttpCode());
+        self::assertFalse($result->isSuccessful());
     }
 }

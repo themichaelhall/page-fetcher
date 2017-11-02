@@ -42,6 +42,18 @@ class PageFetcherResult implements PageFetcherResultInterface
     }
 
     /**
+     * Returns true if the response is successful, false otherwise.
+     *
+     * @since 1.0.0
+     *
+     * @return bool True if the response is successful, false otherwise.
+     */
+    public function isSuccessful(): bool
+    {
+        return $this->myHttpCode >= 200 && $this->myHttpCode < 300;
+    }
+
+    /**
      * @var int My http code.
      */
     private $myHttpCode;
