@@ -18,6 +18,24 @@ use DataTypes\Interfaces\UrlInterface;
 interface PageFetcherRequestInterface
 {
     /**
+     * Adds a header.
+     *
+     * @since 1.0.0
+     *
+     * @param string $header The header.
+     */
+    public function addHeader(string $header): void;
+
+    /**
+     * Returns the headers.
+     *
+     * @since 1.0.0
+     *
+     * @return string[] The headers.
+     */
+    public function getHeaders(): array;
+
+    /**
      * Returns the url.
      *
      * @since 1.0.0

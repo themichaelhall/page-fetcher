@@ -22,4 +22,26 @@ class PageFetcherRequestTest extends TestCase
 
         self::assertSame('https://example.com/foo/bar', $request->getUrl()->__toString());
     }
+
+    /**
+     * Test getHeaders method.
+     */
+    public function testGetHeaders()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.com/foo/bar'));
+
+        self::assertSame([], $request->getHeaders());
+    }
+
+    /**
+     * Test addHeaders method.
+     */
+    public function testAddHeader()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.com/foo/bar'));
+        $request->addHeader('X-Test-Foo: Foo Header');
+        $request->addHeader('X-Test-Bar: Bar Header');
+
+        self::assertSame(['X-Test-Foo: Foo Header', 'X-Test-Bar: Bar Header'], $request->getHeaders());
+    }
 }

@@ -20,11 +20,15 @@ class PageFetcherTest extends TestCase
     public function testOkResult()
     {
         $pageFetcher = new PageFetcher();
-        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/'));
+        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/anything'));
+        $request->addHeader('X-Test-Header: Foo Bar');
         $result = $pageFetcher->fetch($request);
+        $jsonContent = json_decode($result->getContent(), true);
 
         self::assertSame(200, $result->getHttpCode());
-        self::assertContains('httpbin', $result->getContent());
+        self::assertSame('GET', $jsonContent['method']);
+        self::assertSame('Foo Bar', $jsonContent['headers']['X-Test-Header']);
+
         self::assertTrue($result->isSuccessful());
     }
 
@@ -48,11 +52,11 @@ class PageFetcherTest extends TestCase
     public function testNotFoundResult()
     {
         $pageFetcher = new PageFetcher();
-        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/status/418'));
+        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/status/404'));
         $result = $pageFetcher->fetch($request);
 
-        self::assertSame(418, $result->getHttpCode());
-        self::assertContains('-=[ teapot ]=-', $result->getContent());
+        self::assertSame(404, $result->getHttpCode());
+        self::assertSame('', $result->getContent());
         self::assertFalse($result->isSuccessful());
     }
 }

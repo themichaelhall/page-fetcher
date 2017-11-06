@@ -28,6 +28,31 @@ class PageFetcherRequest implements PageFetcherRequestInterface
     public function __construct(UrlInterface $url)
     {
         $this->myUrl = $url;
+        $this->myHeaders = [];
+    }
+
+    /**
+     * Adds a header.
+     *
+     * @since 1.0.0
+     *
+     * @param string $header The header.
+     */
+    public function addHeader(string $header): void
+    {
+        $this->myHeaders[] = $header;
+    }
+
+    /**
+     * Returns the headers.
+     *
+     * @since 1.0.0
+     *
+     * @return string[] The headers.
+     */
+    public function getHeaders(): array
+    {
+        return $this->myHeaders;
     }
 
     /**
@@ -46,4 +71,9 @@ class PageFetcherRequest implements PageFetcherRequestInterface
      * @var UrlInterface My url.
      */
     private $myUrl;
+
+    /**
+     * @var string[] My headers.
+     */
+    private $myHeaders;
 }

@@ -36,6 +36,7 @@ class PageFetcher implements PageFetcherInterface
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, true);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $request->getHeaders());
 
         $result = curl_exec($curl);
         if ($result === false) {
