@@ -44,4 +44,14 @@ class PageFetcherRequestTest extends TestCase
 
         self::assertSame(['X-Test-Foo: Foo Header', 'X-Test-Bar: Bar Header'], $request->getHeaders());
     }
+
+    /**
+     * Test getMethod method.
+     */
+    public function testGetMethod()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.com/foo/bar'), 'PUT');
+
+        self::assertSame('PUT', $request->getMethod());
+    }
 }

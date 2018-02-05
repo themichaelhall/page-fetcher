@@ -59,6 +59,20 @@ class FakePageFetcherTest extends TestCase
     }
 
     /**
+     * Test a POST request.
+     */
+    public function testPostRequest()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.org/'), 'POST');
+        $pageFetcher = new FakePageFetcher();
+        $pageFetcher->setResponseHandler($this->responseHandler);
+        $response = $pageFetcher->fetch($request);
+
+        self::assertSame(200, $response->getHttpCode());
+        self::assertSame("Method=[POST]\nUrl=[https://example.org/]\nHeaders=[]", $response->getContent());
+    }
+
+    /**
      * Set up.
      */
     protected function setUp()
@@ -84,7 +98,7 @@ class FakePageFetcherTest extends TestCase
         }
 
         $content = [
-            'Method=[GET]',
+            'Method=[' . $request->getMethod() . ']',
             'Url=[' . $request->getUrl() . ']',
             'Headers=[' . implode('|', $request->getHeaders()) . ']',
         ];

@@ -36,6 +36,15 @@ interface PageFetcherRequestInterface
     public function getHeaders(): array;
 
     /**
+     * Returns the method.
+     *
+     * @since 1.0.0
+     *
+     * @return string The method.
+     */
+    public function getMethod(): string;
+
+    /**
      * Returns the url.
      *
      * @since 1.0.0

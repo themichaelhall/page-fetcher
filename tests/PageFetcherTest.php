@@ -58,4 +58,19 @@ class PageFetcherTest extends TestCase
         self::assertSame('', $response->getContent());
         self::assertFalse($response->isSuccessful());
     }
+
+    /**
+     * Test a POST request.
+     */
+    public function testPostRequest()
+    {
+        $pageFetcher = new PageFetcher();
+        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/anything'), 'POST');
+        $response = $pageFetcher->fetch($request);
+        $jsonContent = json_decode($response->getContent(), true);
+
+        self::assertSame(200, $response->getHttpCode());
+        self::assertSame('POST', $jsonContent['method']);
+        self::assertTrue($response->isSuccessful());
+    }
 }
