@@ -22,7 +22,7 @@ interface PageFetcherInterface
      *
      * @param PageFetcherRequestInterface $request The page fetcher request.
      *
-     * @return PageFetcherResultInterface The page fetcher result.
+     * @return PageFetcherResponseInterface The page fetcher response.
      */
-    public function fetch(PageFetcherRequestInterface $request): PageFetcherResultInterface;
+    public function fetch(PageFetcherRequestInterface $request): PageFetcherResponseInterface;
 }

@@ -8,17 +8,17 @@ declare(strict_types=1);
 
 namespace MichaelHall\PageFetcher;
 
-use MichaelHall\PageFetcher\Interfaces\PageFetcherResultInterface;
+use MichaelHall\PageFetcher\Interfaces\PageFetcherResponseInterface;
 
 /**
- * Page fetcher result class.
+ * Page fetcher response class.
  *
  * @since 1.0.0
  */
-class PageFetcherResult implements PageFetcherResultInterface
+class PageFetcherResponse implements PageFetcherResponseInterface
 {
     /**
-     * PageFetcherResult constructor.
+     * PageFetcherResponse constructor.
      *
      * @since 1.0.0
      *

@@ -10,7 +10,7 @@ namespace MichaelHall\PageFetcher;
 
 use MichaelHall\PageFetcher\Interfaces\PageFetcherInterface;
 use MichaelHall\PageFetcher\Interfaces\PageFetcherRequestInterface;
-use MichaelHall\PageFetcher\Interfaces\PageFetcherResultInterface;
+use MichaelHall\PageFetcher\Interfaces\PageFetcherResponseInterface;
 
 /**
  * Page fetcher class.
@@ -26,9 +26,9 @@ class PageFetcher implements PageFetcherInterface
      *
      * @param PageFetcherRequestInterface $request The page fetcher request.
      *
-     * @return PageFetcherResultInterface The page fetcher result.
+     * @return PageFetcherResponseInterface The page fetcher response.
      */
-    public function fetch(PageFetcherRequestInterface $request): PageFetcherResultInterface
+    public function fetch(PageFetcherRequestInterface $request): PageFetcherResponseInterface
     {
         $curl = curl_init();
 
@@ -43,7 +43,7 @@ class PageFetcher implements PageFetcherInterface
             $error = curl_error($curl);
             curl_close($curl);
 
-            return new PageFetcherResult(0, $error);
+            return new PageFetcherResponse(0, $error);
         }
 
         $httpCode = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -52,6 +52,6 @@ class PageFetcher implements PageFetcherInterface
         $resultParts = explode("\r\n\r\n", $result, 2);
         $content = count($resultParts) > 1 ? $resultParts[1] : '';
 
-        return new PageFetcherResult($httpCode, $content);
+        return new PageFetcherResponse($httpCode, $content);
     }
 }

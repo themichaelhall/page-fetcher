@@ -4,36 +4,36 @@ declare(strict_types=1);
 
 namespace MichaelHall\PageFetcher\Tests;
 
-use MichaelHall\PageFetcher\PageFetcherResult;
+use MichaelHall\PageFetcher\PageFetcherResponse;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test PageFetcherResult class.
+ * Test PageFetcherResponse class.
  */
-class PageFetcherResultTest extends TestCase
+class PageFetcherResponseTest extends TestCase
 {
     /**
-     * Test default result.
+     * Test default response.
      */
-    public function testDefaultResult()
+    public function testDefaultResponse()
     {
-        $result = new PageFetcherResult();
+        $response = new PageFetcherResponse();
 
-        self::assertSame(200, $result->getHttpCode());
-        self::assertSame('', $result->getContent());
-        self::assertTrue($result->isSuccessful());
+        self::assertSame(200, $response->getHttpCode());
+        self::assertSame('', $response->getContent());
+        self::assertTrue($response->isSuccessful());
     }
 
     /**
-     * Test custom result.
+     * Test custom response.
      */
-    public function testCustomResult()
+    public function testCustomResponse()
     {
-        $result = new PageFetcherResult(404, 'Page was not found.');
+        $response = new PageFetcherResponse(404, 'Page was not found.');
 
-        self::assertSame(404, $result->getHttpCode());
-        self::assertSame('Page was not found.', $result->getContent());
-        self::assertFalse($result->isSuccessful());
+        self::assertSame(404, $response->getHttpCode());
+        self::assertSame('Page was not found.', $response->getContent());
+        self::assertFalse($response->isSuccessful());
     }
 
     /**
@@ -46,9 +46,9 @@ class PageFetcherResultTest extends TestCase
      */
     public function testIsSuccessful(int $httpCode, bool $expectedIsSuccessful)
     {
-        $result = new PageFetcherResult($httpCode);
+        $response = new PageFetcherResponse($httpCode);
 
-        self::assertSame($expectedIsSuccessful, $result->isSuccessful());
+        self::assertSame($expectedIsSuccessful, $response->isSuccessful());
     }
 
     /**

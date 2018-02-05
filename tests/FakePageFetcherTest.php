@@ -7,9 +7,9 @@ namespace MichaelHall\PageFetcher\Tests;
 use DataTypes\Url;
 use MichaelHall\PageFetcher\FakePageFetcher;
 use MichaelHall\PageFetcher\Interfaces\PageFetcherRequestInterface;
-use MichaelHall\PageFetcher\Interfaces\PageFetcherResultInterface;
+use MichaelHall\PageFetcher\Interfaces\PageFetcherResponseInterface;
 use MichaelHall\PageFetcher\PageFetcherRequest;
-use MichaelHall\PageFetcher\PageFetcherResult;
+use MichaelHall\PageFetcher\PageFetcherResponse;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -18,16 +18,16 @@ use PHPUnit\Framework\TestCase;
 class FakePageFetcherTest extends TestCase
 {
     /**
-     * Test fetch a page returning the default result.
+     * Test fetch a page returning the default response.
      */
-    public function testDefaultResult()
+    public function testDefaultResponse()
     {
         $request = new PageFetcherRequest(Url::parse('https://example.org/'));
         $pageFetcher = new FakePageFetcher();
-        $result = $pageFetcher->fetch($request);
+        $response = $pageFetcher->fetch($request);
 
-        self::assertSame(200, $result->getHttpCode());
-        self::assertSame('', $result->getContent());
+        self::assertSame(200, $response->getHttpCode());
+        self::assertSame('', $response->getContent());
     }
 
     /**
@@ -37,11 +37,11 @@ class FakePageFetcherTest extends TestCase
     {
         $request = new PageFetcherRequest(Url::parse('https://example.org/'));
         $pageFetcher = new FakePageFetcher();
-        $pageFetcher->setResultHandler($this->resultHandler);
-        $result = $pageFetcher->fetch($request);
+        $pageFetcher->setResponseHandler($this->responseHandler);
+        $response = $pageFetcher->fetch($request);
 
-        self::assertSame(200, $result->getHttpCode());
-        self::assertSame("Method=[GET]\nUrl=[https://example.org/]\nHeaders=[]", $result->getContent());
+        self::assertSame(200, $response->getHttpCode());
+        self::assertSame("Method=[GET]\nUrl=[https://example.org/]\nHeaders=[]", $response->getContent());
     }
 
     /**
@@ -51,11 +51,11 @@ class FakePageFetcherTest extends TestCase
     {
         $request = new PageFetcherRequest(Url::parse('https://example.org/notfound'));
         $pageFetcher = new FakePageFetcher();
-        $pageFetcher->setResultHandler($this->resultHandler);
-        $result = $pageFetcher->fetch($request);
+        $pageFetcher->setResponseHandler($this->responseHandler);
+        $response = $pageFetcher->fetch($request);
 
-        self::assertSame(404, $result->getHttpCode());
-        self::assertSame("Method=[GET]\nUrl=[https://example.org/notfound]\nHeaders=[]", $result->getContent());
+        self::assertSame(404, $response->getHttpCode());
+        self::assertSame("Method=[GET]\nUrl=[https://example.org/notfound]\nHeaders=[]", $response->getContent());
     }
 
     /**
@@ -63,24 +63,24 @@ class FakePageFetcherTest extends TestCase
      */
     protected function setUp()
     {
-        $this->resultHandler = function (PageFetcherRequestInterface $request): PageFetcherResultInterface {
-            return self::resultHandler($request);
+        $this->responseHandler = function (PageFetcherRequestInterface $request): PageFetcherResponseInterface {
+            return self::responseHandler($request);
         };
     }
 
     /**
-     * My result handler.
+     * My response handler.
      *
      * @param PageFetcherRequestInterface $request The request.
      *
-     * @return PageFetcherResultInterface The response.
+     * @return PageFetcherResponseInterface The response.
      */
-    private static function resultHandler(PageFetcherRequestInterface $request): PageFetcherResultInterface
+    private static function responseHandler(PageFetcherRequestInterface $request): PageFetcherResponseInterface
     {
-        $resultCode = 200;
+        $httpCode = 200;
 
         if ($request->getUrl()->getPath()->__toString() === '/notfound') {
-            $resultCode = 404;
+            $httpCode = 404;
         }
 
         $content = [
@@ -89,11 +89,11 @@ class FakePageFetcherTest extends TestCase
             'Headers=[' . implode('|', $request->getHeaders()) . ']',
         ];
 
-        return new PageFetcherResult($resultCode, implode("\n", $content));
+        return new PageFetcherResponse($httpCode, implode("\n", $content));
     }
 
     /**
-     * @var callable My result handler.
+     * @var callable My response handler.
      */
-    private $resultHandler;
+    private $responseHandler;
 }

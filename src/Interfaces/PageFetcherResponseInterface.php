@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace MichaelHall\PageFetcher\Interfaces;
 
 /**
- * Interface for PageFetcherResult.
+ * Interface for PageFetcherResponse.
  *
  * @since 1.0.0
  */
-interface PageFetcherResultInterface
+interface PageFetcherResponseInterface
 {
     /**
      * Returns the content.

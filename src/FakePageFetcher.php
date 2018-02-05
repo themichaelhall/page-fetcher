@@ -10,7 +10,7 @@ namespace MichaelHall\PageFetcher;
 
 use MichaelHall\PageFetcher\Interfaces\PageFetcherInterface;
 use MichaelHall\PageFetcher\Interfaces\PageFetcherRequestInterface;
-use MichaelHall\PageFetcher\Interfaces\PageFetcherResultInterface;
+use MichaelHall\PageFetcher\Interfaces\PageFetcherResponseInterface;
 
 /**
  * Fake page fetcher class.
@@ -26,7 +26,7 @@ class FakePageFetcher implements PageFetcherInterface
      */
     public function __construct()
     {
-        $this->resultHandler = null;
+        $this->responseHandler = null;
     }
 
     /**
@@ -36,33 +36,33 @@ class FakePageFetcher implements PageFetcherInterface
      *
      * @param PageFetcherRequestInterface $request The page fetcher request.
      *
-     * @return PageFetcherResultInterface The page fetcher result.
+     * @return PageFetcherResponseInterface The page fetcher response.
      */
-    public function fetch(PageFetcherRequestInterface $request): PageFetcherResultInterface
+    public function fetch(PageFetcherRequestInterface $request): PageFetcherResponseInterface
     {
-        if ($this->resultHandler === null) {
-            return new PageFetcherResult();
+        if ($this->responseHandler === null) {
+            return new PageFetcherResponse();
         }
 
-        return call_user_func($this->resultHandler, $request);
+        return call_user_func($this->responseHandler, $request);
     }
 
     /**
-     * Sets the result handler to use for returning a result.
+     * Sets the response handler to use for returning a response.
      *
-     * The handler must be a callable in form: function(PageFetcherRequestInterface $request): PageFetcherResultInterface
+     * The handler must be a callable in form: function(PageFetcherRequestInterface $request): PageFetcherResponseInterface
      *
      * @since 1.0.0
      *
-     * @param callable $resultHandler The result handler.
+     * @param callable $responseHandler The response handler.
      */
-    public function setResultHandler(callable $resultHandler): void
+    public function setResponseHandler(callable $responseHandler): void
     {
-        $this->resultHandler = $resultHandler;
+        $this->responseHandler = $responseHandler;
     }
 
     /**
-     * @var callable|null My result handler.
+     * @var callable|null My response handler.
      */
-    private $resultHandler;
+    private $responseHandler;
 }
