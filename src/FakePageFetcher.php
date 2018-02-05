@@ -23,12 +23,10 @@ class FakePageFetcher implements PageFetcherInterface
      * Constructs a fake page fetcher.
      *
      * @since 1.0.0
-     *
-     * @param PageFetcherResultInterface $defaultResult The default result.
      */
-    public function __construct(PageFetcherResultInterface $defaultResult)
+    public function __construct()
     {
-        $this->myDefaultResult = $defaultResult;
+        $this->resultHandler = null;
     }
 
     /**
@@ -42,11 +40,29 @@ class FakePageFetcher implements PageFetcherInterface
      */
     public function fetch(PageFetcherRequestInterface $request): PageFetcherResultInterface
     {
-        return $this->myDefaultResult;
+        if ($this->resultHandler === null) {
+            return new PageFetcherResult();
+        }
+
+        return call_user_func($this->resultHandler, $request);
     }
 
     /**
-     * @var PageFetcherResultInterface My default result.
+     * Sets the result handler to use for returning a result.
+     *
+     * The handler must be a callable in form: function(PageFetcherRequestInterface $request): PageFetcherResultInterface
+     *
+     * @since 1.0.0
+     *
+     * @param callable $resultHandler The result handler.
      */
-    private $myDefaultResult;
+    public function setResultHandler(callable $resultHandler): void
+    {
+        $this->resultHandler = $resultHandler;
+    }
+
+    /**
+     * @var callable|null My result handler.
+     */
+    private $resultHandler;
 }
