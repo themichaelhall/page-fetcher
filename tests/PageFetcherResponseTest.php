@@ -69,4 +69,26 @@ class PageFetcherResponseTest extends TestCase
             [500, false],
         ];
     }
+
+    /**
+     * Test getHeaders method.
+     */
+    public function testGetHeaders()
+    {
+        $response = new PageFetcherResponse();
+
+        self::assertSame([], $response->getHeaders());
+    }
+
+    /**
+     * Test addHeaders method.
+     */
+    public function testAddHeader()
+    {
+        $response = $response = new PageFetcherResponse();
+        $response->addHeader('X-Test-Foo: Foo Header');
+        $response->addHeader('X-Test-Bar: Bar Header');
+
+        self::assertSame(['X-Test-Foo: Foo Header', 'X-Test-Bar: Bar Header'], $response->getHeaders());
+    }
 }

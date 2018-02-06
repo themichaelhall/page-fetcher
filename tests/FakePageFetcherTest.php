@@ -28,6 +28,7 @@ class FakePageFetcherTest extends TestCase
 
         self::assertSame(200, $response->getHttpCode());
         self::assertSame('', $response->getContent());
+        self::assertSame([], $response->getHeaders());
     }
 
     /**
@@ -42,6 +43,7 @@ class FakePageFetcherTest extends TestCase
 
         self::assertSame(200, $response->getHttpCode());
         self::assertSame("Method=[GET]\nUrl=[https://example.org/]\nHeaders=[]", $response->getContent());
+        self::assertSame(['X-Request-Url: https://example.org/'], $response->getHeaders());
     }
 
     /**
@@ -56,6 +58,7 @@ class FakePageFetcherTest extends TestCase
 
         self::assertSame(404, $response->getHttpCode());
         self::assertSame("Method=[GET]\nUrl=[https://example.org/notfound]\nHeaders=[]", $response->getContent());
+        self::assertSame(['X-Request-Url: https://example.org/notfound'], $response->getHeaders());
     }
 
     /**
@@ -70,6 +73,7 @@ class FakePageFetcherTest extends TestCase
 
         self::assertSame(200, $response->getHttpCode());
         self::assertSame("Method=[POST]\nUrl=[https://example.org/]\nHeaders=[]", $response->getContent());
+        self::assertSame(['X-Request-Url: https://example.org/'], $response->getHeaders());
     }
 
     /**
@@ -103,7 +107,10 @@ class FakePageFetcherTest extends TestCase
             'Headers=[' . implode('|', $request->getHeaders()) . ']',
         ];
 
-        return new PageFetcherResponse($httpCode, implode("\n", $content));
+        $response = new PageFetcherResponse($httpCode, implode("\n", $content));
+        $response->addHeader('X-Request-Url: ' . $request->getUrl());
+
+        return $response;
     }
 
     /**

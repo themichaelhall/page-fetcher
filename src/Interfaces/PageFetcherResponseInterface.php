@@ -16,6 +16,15 @@ namespace MichaelHall\PageFetcher\Interfaces;
 interface PageFetcherResponseInterface
 {
     /**
+     * Adds a header.
+     *
+     * @since 1.0.0
+     *
+     * @param string $header The header.
+     */
+    public function addHeader(string $header): void;
+
+    /**
      * Returns the content.
      *
      * @since 1.0.0
@@ -23,6 +32,15 @@ interface PageFetcherResponseInterface
      * @return string The content.
      */
     public function getContent(): string;
+
+    /**
+     * Returns the headers.
+     *
+     * @since 1.0.0
+     *
+     * @return string[] The headers.
+     */
+    public function getHeaders(): array;
 
     /**
      * Returns the http code.

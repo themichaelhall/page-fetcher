@@ -27,8 +27,21 @@ class PageFetcherResponse implements PageFetcherResponseInterface
      */
     public function __construct(int $httpCode = 200, string $content = '')
     {
-        $this->myHttpCode = $httpCode;
-        $this->myContent = $content;
+        $this->httpCode = $httpCode;
+        $this->content = $content;
+        $this->headers = [];
+    }
+
+    /**
+     * Adds a header.
+     *
+     * @since 1.0.0
+     *
+     * @param string $header The header.
+     */
+    public function addHeader(string $header): void
+    {
+        $this->headers[] = $header;
     }
 
     /**
@@ -40,7 +53,19 @@ class PageFetcherResponse implements PageFetcherResponseInterface
      */
     public function getContent(): string
     {
-        return $this->myContent;
+        return $this->content;
+    }
+
+    /**
+     * Returns the headers.
+     *
+     * @since 1.0.0
+     *
+     * @return string[] The headers.
+     */
+    public function getHeaders(): array
+    {
+        return $this->headers;
     }
 
     /**
@@ -52,7 +77,7 @@ class PageFetcherResponse implements PageFetcherResponseInterface
      */
     public function getHttpCode(): int
     {
-        return $this->myHttpCode;
+        return $this->httpCode;
     }
 
     /**
@@ -64,16 +89,21 @@ class PageFetcherResponse implements PageFetcherResponseInterface
      */
     public function isSuccessful(): bool
     {
-        return $this->myHttpCode >= 200 && $this->myHttpCode < 300;
+        return $this->httpCode >= 200 && $this->httpCode < 300;
     }
 
     /**
      * @var int My http code.
      */
-    private $myHttpCode;
+    private $httpCode;
 
     /**
      * @var string My content.
      */
-    private $myContent;
+    private $content;
+
+    /**
+     * @var string[] My headers.
+     */
+    private $headers;
 }

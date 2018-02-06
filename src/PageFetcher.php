@@ -54,8 +54,15 @@ class PageFetcher implements PageFetcherInterface
         curl_close($curl);
 
         $resultParts = explode("\r\n\r\n", $result, 2);
+        $headers = explode("\r\n", $resultParts[0]);
+        array_shift($headers);
         $content = count($resultParts) > 1 ? $resultParts[1] : '';
 
-        return new PageFetcherResponse($httpCode, $content);
+        $response = new PageFetcherResponse($httpCode, $content);
+        foreach ($headers as $header) {
+            $response->addHeader(trim($header));
+        }
+
+        return $response;
     }
 }

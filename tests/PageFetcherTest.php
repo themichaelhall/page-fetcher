@@ -73,4 +73,18 @@ class PageFetcherTest extends TestCase
         self::assertSame('POST', $jsonContent['method']);
         self::assertTrue($response->isSuccessful());
     }
+
+    /**
+     * Test fetching a page with custom headers.
+     */
+    public function testWithCustomHeaders()
+    {
+        $pageFetcher = new PageFetcher();
+        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/response-headers?X-Test-Header=Foo'));
+        $response = $pageFetcher->fetch($request);
+
+        self::assertSame(200, $response->getHttpCode());
+        self::assertContains('X-Test-Header: Foo', $response->getHeaders());
+        self::assertTrue($response->isSuccessful());
+    }
 }
