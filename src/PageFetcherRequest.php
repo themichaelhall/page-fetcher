@@ -31,6 +31,7 @@ class PageFetcherRequest implements PageFetcherRequestInterface
         $this->url = $url;
         $this->method = $method;
         $this->headers = [];
+        $this->postFields = [];
     }
 
     /**
@@ -70,6 +71,18 @@ class PageFetcherRequest implements PageFetcherRequestInterface
     }
 
     /**
+     * Returns the post fields.
+     *
+     * @since 1.0.0
+     *
+     * @return array The post fields.
+     */
+    public function getPostFields(): array
+    {
+        return $this->postFields;
+    }
+
+    /**
      * Returns the url.
      *
      * @since 1.0.0
@@ -79,6 +92,19 @@ class PageFetcherRequest implements PageFetcherRequestInterface
     public function getUrl(): UrlInterface
     {
         return $this->url;
+    }
+
+    /**
+     * Sets a post field.
+     *
+     * @since 1.0.0
+     *
+     * @param string $name  The name.
+     * @param string $value The value.
+     */
+    public function setPostField(string $name, string $value): void
+    {
+        $this->postFields[$name] = $value;
     }
 
     /**
@@ -95,4 +121,9 @@ class PageFetcherRequest implements PageFetcherRequestInterface
      * @var string[] My headers.
      */
     private $headers;
+
+    /**
+     * @var array My post fields.
+     */
+    private $postFields;
 }

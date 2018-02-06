@@ -77,6 +77,23 @@ class FakePageFetcherTest extends TestCase
     }
 
     /**
+     * Test a POST request with post fields.
+     */
+    public function testPostRequestWithPostFields()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.org/'), 'POST');
+        $request->setPostField('Foo', 'Bar');
+        $request->setPostField('Baz', '');
+        $pageFetcher = new FakePageFetcher();
+        $pageFetcher->setResponseHandler($this->responseHandler);
+        $response = $pageFetcher->fetch($request);
+
+        self::assertSame(200, $response->getHttpCode());
+        self::assertSame("Method=[POST]\nUrl=[https://example.org/]\nHeaders=[]\nPost[Foo]=[Bar]\nPost[Baz]=[]", $response->getContent());
+        self::assertSame(['X-Request-Url: https://example.org/'], $response->getHeaders());
+    }
+
+    /**
      * Set up.
      */
     protected function setUp()
@@ -106,6 +123,10 @@ class FakePageFetcherTest extends TestCase
             'Url=[' . $request->getUrl() . ']',
             'Headers=[' . implode('|', $request->getHeaders()) . ']',
         ];
+
+        foreach ($request->getPostFields() as $name => $value) {
+            $content[] = 'Post[' . $name . ']=[' . $value . ']';
+        }
 
         $response = new PageFetcherResponse($httpCode, implode("\n", $content));
         $response->addHeader('X-Request-Url: ' . $request->getUrl());

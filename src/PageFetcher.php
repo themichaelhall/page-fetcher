@@ -42,6 +42,11 @@ class PageFetcher implements PageFetcherInterface
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $request->getHeaders());
 
+        $postFields = $request->getPostFields();
+        if (count($postFields) > 0) {
+            curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($postFields));
+        }
+
         $result = curl_exec($curl);
         if ($result === false) {
             $error = curl_error($curl);
@@ -49,13 +54,26 @@ class PageFetcher implements PageFetcherInterface
 
             return new PageFetcherResponse(0, $error);
         }
-
-        $httpCode = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
+        return $this->parseResult($result);
+    }
+
+    /**
+     * Parses the CURL result into a PageFetcherResponse.
+     *
+     * @param string $result The CURL result.
+     *
+     * @return PageFetcherResponseInterface The PageFetcherResponse.
+     */
+    private function parseResult(string $result): PageFetcherResponseInterface
+    {
         $resultParts = explode("\r\n\r\n", $result, 2);
+
         $headers = explode("\r\n", $resultParts[0]);
-        array_shift($headers);
+        $statusLine = array_shift($headers);
+        $statusLineParts = explode(' ', $statusLine);
+        $httpCode = intval($statusLineParts[1]);
         $content = count($resultParts) > 1 ? $resultParts[1] : '';
 
         $response = new PageFetcherResponse($httpCode, $content);

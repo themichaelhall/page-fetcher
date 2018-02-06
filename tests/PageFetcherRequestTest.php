@@ -54,4 +54,26 @@ class PageFetcherRequestTest extends TestCase
 
         self::assertSame('PUT', $request->getMethod());
     }
+
+    /**
+     * Test getPostFields method.
+     */
+    public function testGetPostFields()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.com/foo/bar'));
+
+        self::assertSame([], $request->getPostFields());
+    }
+
+    /**
+     * Test setPostField method.
+     */
+    public function testSetPostField()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.com/foo/bar'));
+        $request->setPostField('Foo', 'Bar');
+        $request->setPostField('Baz', '');
+
+        self::assertSame(['Foo' => 'Bar', 'Baz' => ''], $request->getPostFields());
+    }
 }

@@ -66,11 +66,14 @@ class PageFetcherTest extends TestCase
     {
         $pageFetcher = new PageFetcher();
         $request = new PageFetcherRequest(Url::parse('https://httpbin.org/anything'), 'POST');
+        $request->setPostField('Foo', 'Bar');
         $response = $pageFetcher->fetch($request);
         $jsonContent = json_decode($response->getContent(), true);
 
         self::assertSame(200, $response->getHttpCode());
         self::assertSame('POST', $jsonContent['method']);
+        self::assertSame(['Foo' => 'Bar'], $jsonContent['form']);
+        self::assertSame('application/x-www-form-urlencoded', $jsonContent['headers']['Content-Type']);
         self::assertTrue($response->isSuccessful());
     }
 

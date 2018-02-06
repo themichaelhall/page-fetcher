@@ -45,6 +45,15 @@ interface PageFetcherRequestInterface
     public function getMethod(): string;
 
     /**
+     * Returns the post fields.
+     *
+     * @since 1.0.0
+     *
+     * @return array The post fields.
+     */
+    public function getPostFields(): array;
+
+    /**
      * Returns the url.
      *
      * @since 1.0.0
@@ -52,4 +61,14 @@ interface PageFetcherRequestInterface
      * @return UrlInterface The url.
      */
     public function getUrl(): UrlInterface;
+
+    /**
+     * Sets a post field.
+     *
+     * @since 1.0.0
+     *
+     * @param string $name  The name.
+     * @param string $value The value.
+     */
+    public function setPostField(string $name, string $value): void;
 }
