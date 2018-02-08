@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MichaelHall\PageFetcher\Tests;
 
+use DataTypes\FilePath;
 use DataTypes\Url;
 use MichaelHall\PageFetcher\PageFetcher;
 use MichaelHall\PageFetcher\PageFetcherRequest;
@@ -74,6 +75,26 @@ class PageFetcherTest extends TestCase
         self::assertSame('POST', $jsonContent['method']);
         self::assertSame(['Foo' => 'Bar'], $jsonContent['form']);
         self::assertSame('application/x-www-form-urlencoded', $jsonContent['headers']['Content-Type']);
+        self::assertTrue($response->isSuccessful());
+    }
+
+    /**
+     * Test a POST request with files.
+     */
+    public function testPostRequestWithFiles()
+    {
+        $pageFetcher = new PageFetcher();
+        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/anything'), 'POST');
+        $request->setFile('Foo', FilePath::parse(__DIR__ . '/TestFiles/hello-world.txt'));
+        $request->setPostField('Bar', 'Baz');
+        $response = $pageFetcher->fetch($request);
+        $jsonContent = json_decode($response->getContent(), true);
+
+        self::assertSame(200, $response->getHttpCode());
+        self::assertSame('POST', $jsonContent['method']);
+        self::assertSame(['Foo' => 'Hello World!'], $jsonContent['files']);
+        self::assertSame(['Bar' => 'Baz'], $jsonContent['form']);
+        self::assertStringStartsWith('multipart/form-data', $jsonContent['headers']['Content-Type']);
         self::assertTrue($response->isSuccessful());
     }
 

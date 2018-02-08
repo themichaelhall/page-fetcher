@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MichaelHall\PageFetcher;
 
+use DataTypes\Interfaces\FilePathInterface;
 use DataTypes\Interfaces\UrlInterface;
 use MichaelHall\PageFetcher\Interfaces\PageFetcherRequestInterface;
 
@@ -32,6 +33,7 @@ class PageFetcherRequest implements PageFetcherRequestInterface
         $this->method = $method;
         $this->headers = [];
         $this->postFields = [];
+        $this->files = [];
     }
 
     /**
@@ -44,6 +46,18 @@ class PageFetcherRequest implements PageFetcherRequestInterface
     public function addHeader(string $header): void
     {
         $this->headers[] = $header;
+    }
+
+    /**
+     * Returns the files to upload.
+     *
+     * @since 1.0.0
+     *
+     * @return array The files to upload.
+     */
+    public function getFiles(): array
+    {
+        return $this->files;
     }
 
     /**
@@ -95,6 +109,19 @@ class PageFetcherRequest implements PageFetcherRequestInterface
     }
 
     /**
+     * Sets a file to upload.
+     *
+     * @since 1.0.0
+     *
+     * @param string            $name     The name.
+     * @param FilePathInterface $filePath The file path.
+     */
+    public function setFile(string $name, FilePathInterface $filePath): void
+    {
+        $this->files[$name] = $filePath;
+    }
+
+    /**
      * Sets a post field.
      *
      * @since 1.0.0
@@ -126,4 +153,9 @@ class PageFetcherRequest implements PageFetcherRequestInterface
      * @var array My post fields.
      */
     private $postFields;
+
+    /**
+     * @var array My files.
+     */
+    private $files;
 }

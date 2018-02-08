@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MichaelHall\PageFetcher\Interfaces;
 
+use DataTypes\Interfaces\FilePathInterface;
 use DataTypes\Interfaces\UrlInterface;
 
 /**
@@ -25,6 +26,15 @@ interface PageFetcherRequestInterface
      * @param string $header The header.
      */
     public function addHeader(string $header): void;
+
+    /**
+     * Returns the files to upload.
+     *
+     * @since 1.0.0
+     *
+     * @return array The files to upload.
+     */
+    public function getFiles(): array;
 
     /**
      * Returns the headers.
@@ -61,6 +71,16 @@ interface PageFetcherRequestInterface
      * @return UrlInterface The url.
      */
     public function getUrl(): UrlInterface;
+
+    /**
+     * Sets a file to upload.
+     *
+     * @since 1.0.0
+     *
+     * @param string            $name     The name.
+     * @param FilePathInterface $filePath The file path.
+     */
+    public function setFile(string $name, FilePathInterface $filePath): void;
 
     /**
      * Sets a post field.

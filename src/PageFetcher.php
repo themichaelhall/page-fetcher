@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MichaelHall\PageFetcher;
 
+use DataTypes\Interfaces\FilePathInterface;
 use MichaelHall\PageFetcher\Interfaces\PageFetcherInterface;
 use MichaelHall\PageFetcher\Interfaces\PageFetcherRequestInterface;
 use MichaelHall\PageFetcher\Interfaces\PageFetcherResponseInterface;
@@ -42,9 +43,23 @@ class PageFetcher implements PageFetcherInterface
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $request->getHeaders());
 
-        $postFields = $request->getPostFields();
+        $postFields = [];
+        $hasFiles = false;
+
+        foreach ($request->getFiles() as $name => $filePath) {
+            /** @var FilePathInterface $filePath */
+            $curlFile = curl_file_create($filePath->__toString(), mime_content_type($filePath->__toString()), $filePath->getFilename()
+            );
+            $postFields[$name] = $curlFile;
+            $hasFiles = true;
+        }
+
+        foreach ($request->getPostFields() as $name => $value) {
+            $postFields[$name] = $value;
+        }
+
         if (count($postFields) > 0) {
-            curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($postFields));
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $hasFiles ? $postFields : http_build_query($postFields));
         }
 
         $result = curl_exec($curl);
@@ -74,6 +89,10 @@ class PageFetcher implements PageFetcherInterface
         $statusLine = array_shift($headers);
         $statusLineParts = explode(' ', $statusLine);
         $httpCode = intval($statusLineParts[1]);
+        if ($httpCode === 100) {
+            return $this->parseResult($resultParts[1]);
+        }
+
         $content = count($resultParts) > 1 ? $resultParts[1] : '';
 
         $response = new PageFetcherResponse($httpCode, $content);

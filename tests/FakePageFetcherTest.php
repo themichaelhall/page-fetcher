@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MichaelHall\PageFetcher\Tests;
 
+use DataTypes\FilePath;
 use DataTypes\Url;
 use MichaelHall\PageFetcher\FakePageFetcher;
 use MichaelHall\PageFetcher\Interfaces\PageFetcherRequestInterface;
@@ -94,6 +95,25 @@ class FakePageFetcherTest extends TestCase
     }
 
     /**
+     * Test a POST request with files.
+     */
+    public function testPostRequestWithFiles()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.org/'), 'POST');
+        $filePath1 = FilePath::parse('/tmp/file1.txt');
+        $filePath2 = FilePath::parse('/tmp/file2.txt');
+        $request->setFile('Foo', $filePath1);
+        $request->setFile('Baz', $filePath2);
+        $pageFetcher = new FakePageFetcher();
+        $pageFetcher->setResponseHandler($this->responseHandler);
+        $response = $pageFetcher->fetch($request);
+
+        self::assertSame(200, $response->getHttpCode());
+        self::assertSame("Method=[POST]\nUrl=[https://example.org/]\nHeaders=[]\nFile[Foo]=[$filePath1]\nFile[Baz]=[$filePath2]", $response->getContent());
+        self::assertSame(['X-Request-Url: https://example.org/'], $response->getHeaders());
+    }
+
+    /**
      * Set up.
      */
     protected function setUp()
@@ -126,6 +146,10 @@ class FakePageFetcherTest extends TestCase
 
         foreach ($request->getPostFields() as $name => $value) {
             $content[] = 'Post[' . $name . ']=[' . $value . ']';
+        }
+
+        foreach ($request->getFiles() as $name => $path) {
+            $content[] = 'File[' . $name . ']=[' . $path . ']';
         }
 
         $response = new PageFetcherResponse($httpCode, implode("\n", $content));

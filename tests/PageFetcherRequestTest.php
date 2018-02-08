@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MichaelHall\PageFetcher\Tests;
 
+use DataTypes\FilePath;
 use DataTypes\Url;
 use MichaelHall\PageFetcher\PageFetcherRequest;
 use PHPUnit\Framework\TestCase;
@@ -75,5 +76,29 @@ class PageFetcherRequestTest extends TestCase
         $request->setPostField('Baz', '');
 
         self::assertSame(['Foo' => 'Bar', 'Baz' => ''], $request->getPostFields());
+    }
+
+    /**
+     * Test getFiles method.
+     */
+    public function testGetFiles()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.com/foo/bar'));
+
+        self::assertSame([], $request->getFiles());
+    }
+
+    /**
+     * Test setFile method.
+     */
+    public function testSetFile()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.com/foo/bar'));
+        $filePath1 = FilePath::parse('/tmp/file1');
+        $filePath2 = FilePath::parse('/tmp/file1');
+        $request->setFile('Foo', $filePath1);
+        $request->setFile('Bar', $filePath2);
+
+        self::assertSame(['Foo' => $filePath1, 'Bar' => $filePath2], $request->getFiles());
     }
 }
