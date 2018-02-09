@@ -101,4 +101,25 @@ class PageFetcherRequestTest extends TestCase
 
         self::assertSame(['Foo' => $filePath1, 'Bar' => $filePath2], $request->getFiles());
     }
+
+    /**
+     * Test getRawContent method.
+     */
+    public function testGetRawContent()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.com/foo/bar'));
+
+        self::assertSame('', $request->getRawContent());
+    }
+
+    /**
+     * Test setRawContent method.
+     */
+    public function testSetRawContent()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.com/foo/bar'));
+        $request->setRawContent('Baz');
+
+        self::assertSame('Baz', $request->getRawContent());
+    }
 }

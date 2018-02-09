@@ -43,24 +43,7 @@ class PageFetcher implements PageFetcherInterface
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $request->getHeaders());
 
-        $postFields = [];
-        $hasFiles = false;
-
-        foreach ($request->getFiles() as $name => $filePath) {
-            /** @var FilePathInterface $filePath */
-            $curlFile = curl_file_create($filePath->__toString(), mime_content_type($filePath->__toString()), $filePath->getFilename()
-            );
-            $postFields[$name] = $curlFile;
-            $hasFiles = true;
-        }
-
-        foreach ($request->getPostFields() as $name => $value) {
-            $postFields[$name] = $value;
-        }
-
-        if (count($postFields) > 0) {
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $hasFiles ? $postFields : http_build_query($postFields));
-        }
+        $this->setCurlContent($curl, $request);
 
         $result = curl_exec($curl);
         if ($result === false) {
@@ -72,6 +55,42 @@ class PageFetcher implements PageFetcherInterface
         curl_close($curl);
 
         return $this->parseResult($result);
+    }
+
+    /**
+     * Sets the CURL content from request.
+     *
+     * @param resource                    $curl    The CURL instance.
+     * @param PageFetcherRequestInterface $request The request.
+     */
+    private function setCurlContent($curl, PageFetcherRequestInterface $request): void
+    {
+        $rawContent = $request->getRawContent();
+        if ($rawContent !== '') {
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $rawContent);
+
+            return;
+        }
+
+        $postFields = [];
+        $hasFiles = false;
+
+        foreach ($request->getFiles() as $name => $filePath) {
+            /** @var FilePathInterface $filePath */
+            $curlFile = curl_file_create($filePath->__toString(), mime_content_type($filePath->__toString()), $filePath->getFilename());
+            $postFields[$name] = $curlFile;
+            $hasFiles = true;
+        }
+
+        foreach ($request->getPostFields() as $name => $value) {
+            $postFields[$name] = $value;
+        }
+
+        if (count($postFields) === 0) {
+            return;
+        }
+
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $hasFiles ? $postFields : http_build_query($postFields));
     }
 
     /**

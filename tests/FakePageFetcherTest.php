@@ -114,6 +114,23 @@ class FakePageFetcherTest extends TestCase
     }
 
     /**
+     * Test a request with raw content.
+     */
+    public function testRequestWithRawContent()
+    {
+        $request = new PageFetcherRequest(Url::parse('https://example.org/'), 'PUT');
+        $request->addHeader('Content-Type: application/json');
+        $request->setRawContent('{"Foo":"Bar"}');
+        $pageFetcher = new FakePageFetcher();
+        $pageFetcher->setResponseHandler($this->responseHandler);
+        $response = $pageFetcher->fetch($request);
+
+        self::assertSame(200, $response->getHttpCode());
+        self::assertSame("Method=[PUT]\nUrl=[https://example.org/]\nHeaders=[Content-Type: application/json]\nRawContent[{\"Foo\":\"Bar\"}]", $response->getContent());
+        self::assertSame(['X-Request-Url: https://example.org/'], $response->getHeaders());
+    }
+
+    /**
      * Set up.
      */
     protected function setUp()
@@ -150,6 +167,10 @@ class FakePageFetcherTest extends TestCase
 
         foreach ($request->getFiles() as $name => $path) {
             $content[] = 'File[' . $name . ']=[' . $path . ']';
+        }
+
+        if ($request->getRawContent() !== '') {
+            $content[] = 'RawContent[' . $request->getRawContent() . ']';
         }
 
         $response = new PageFetcherResponse($httpCode, implode("\n", $content));

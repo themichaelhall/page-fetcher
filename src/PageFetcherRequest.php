@@ -34,6 +34,7 @@ class PageFetcherRequest implements PageFetcherRequestInterface
         $this->headers = [];
         $this->postFields = [];
         $this->files = [];
+        $this->rawContent = '';
     }
 
     /**
@@ -97,6 +98,18 @@ class PageFetcherRequest implements PageFetcherRequestInterface
     }
 
     /**
+     * Returns the raw content.
+     *
+     * @since 1.0.0
+     *
+     * @return string The raw content.
+     */
+    public function getRawContent(): string
+    {
+        return $this->rawContent;
+    }
+
+    /**
      * Returns the url.
      *
      * @since 1.0.0
@@ -118,6 +131,7 @@ class PageFetcherRequest implements PageFetcherRequestInterface
      */
     public function setFile(string $name, FilePathInterface $filePath): void
     {
+        $this->rawContent = '';
         $this->files[$name] = $filePath;
     }
 
@@ -131,7 +145,22 @@ class PageFetcherRequest implements PageFetcherRequestInterface
      */
     public function setPostField(string $name, string $value): void
     {
+        $this->rawContent = '';
         $this->postFields[$name] = $value;
+    }
+
+    /**
+     * Sets the raw content.
+     *
+     * @since 1.0.0
+     *
+     * @param string $rawContent The raw content.
+     */
+    public function setRawContent(string $rawContent): void
+    {
+        $this->postFields = [];
+        $this->files = [];
+        $this->rawContent = $rawContent;
     }
 
     /**
@@ -158,4 +187,9 @@ class PageFetcherRequest implements PageFetcherRequestInterface
      * @var array My files.
      */
     private $files;
+
+    /**
+     * @var string My raw content.
+     */
+    private $rawContent;
 }

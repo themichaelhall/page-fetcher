@@ -64,6 +64,15 @@ interface PageFetcherRequestInterface
     public function getPostFields(): array;
 
     /**
+     * Returns the raw content.
+     *
+     * @since 1.0.0
+     *
+     * @return string The raw content.
+     */
+    public function getRawContent(): string;
+
+    /**
      * Returns the url.
      *
      * @since 1.0.0
@@ -91,4 +100,13 @@ interface PageFetcherRequestInterface
      * @param string $value The value.
      */
     public function setPostField(string $name, string $value): void;
+
+    /**
+     * Sets the raw content.
+     *
+     * @since 1.0.0
+     *
+     * @param string $rawContent The raw content.
+     */
+    public function setRawContent(string $rawContent): void;
 }

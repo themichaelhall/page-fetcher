@@ -111,4 +111,23 @@ class PageFetcherTest extends TestCase
         self::assertContains('X-Test-Header: Foo', $response->getHeaders());
         self::assertTrue($response->isSuccessful());
     }
+
+    /**
+     * Test a PUT request with raw content.
+     */
+    public function testWithRawContent()
+    {
+        $pageFetcher = new PageFetcher();
+        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/anything'), 'PUT');
+        $request->addHeader('Content-Type: application/json');
+        $request->setRawContent('{"Foo": "Bar"}');
+        $response = $pageFetcher->fetch($request);
+        $jsonContent = json_decode($response->getContent(), true);
+
+        self::assertSame(200, $response->getHttpCode());
+        self::assertSame('PUT', $jsonContent['method']);
+        self::assertSame(['Foo' => 'Bar'], $jsonContent['json']);
+        self::assertSame('application/json', $jsonContent['headers']['Content-Type']);
+        self::assertTrue($response->isSuccessful());
+    }
 }
