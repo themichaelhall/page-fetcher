@@ -21,6 +21,16 @@ use MichaelHall\PageFetcher\Interfaces\PageFetcherResponseInterface;
 class PageFetcher implements PageFetcherInterface
 {
     /**
+     * Constructs the page fetcher.
+     *
+     * @since 1.0.0
+     */
+    public function __construct()
+    {
+        $this->cookieFile = tempnam(sys_get_temp_dir(), 'page-fetcher-cookies-');
+    }
+
+    /**
      * Fetches the content from a request.
      *
      * @since 1.0.0
@@ -42,6 +52,8 @@ class PageFetcher implements PageFetcherInterface
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $request->getMethod());
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $request->getHeaders());
+        curl_setopt($curl, CURLOPT_COOKIEJAR, $this->cookieFile);
+        curl_setopt($curl, CURLOPT_COOKIEFILE, $this->cookieFile);
 
         $this->setCurlContent($curl, $request);
 
@@ -55,6 +67,18 @@ class PageFetcher implements PageFetcherInterface
         curl_close($curl);
 
         return $this->parseResult($result);
+    }
+
+    /**
+     * Destructs the page fetcher.
+     *
+     * @since 1.0.0
+     */
+    public function __destruct()
+    {
+        if (file_exists($this->cookieFile)) {
+            unlink($this->cookieFile);
+        }
     }
 
     /**
@@ -121,4 +145,9 @@ class PageFetcher implements PageFetcherInterface
 
         return $response;
     }
+
+    /**
+     * @var string My cookie file.
+     */
+    private $cookieFile;
 }

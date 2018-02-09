@@ -130,4 +130,23 @@ class PageFetcherTest extends TestCase
         self::assertSame('application/json', $jsonContent['headers']['Content-Type']);
         self::assertTrue($response->isSuccessful());
     }
+
+    /**
+     * Test fetching pages with cookies.
+     */
+    public function testWithCookies()
+    {
+        $pageFetcher = new PageFetcher();
+
+        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/cookies/set?Foo=Bar'));
+        $pageFetcher->fetch($request);
+
+        $request = new PageFetcherRequest(Url::parse('https://httpbin.org/cookies'));
+        $response = $pageFetcher->fetch($request);
+        $jsonContent = json_decode($response->getContent(), true);
+
+        self::assertSame(200, $response->getHttpCode());
+        self::assertSame(['Foo' => 'Bar'], $jsonContent['cookies']);
+        self::assertTrue($response->isSuccessful());
+    }
 }
